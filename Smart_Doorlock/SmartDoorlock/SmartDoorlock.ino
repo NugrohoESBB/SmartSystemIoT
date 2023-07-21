@@ -3,6 +3,7 @@
  
   PIN RFID : SDA D4(2), RST D3(0), SCK D5, MOSI D7, MISO D6
   PIN RELAY : RX (3)
+  PIN SERVO : D8 (15)
 */
 
 #ifdef ESP32
@@ -13,36 +14,32 @@
 #include <WiFiClientSecure.h>
 #include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
-#include <MFRC522.h>  // Library for RFID module
+#include <MFRC522.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-//LiquidCrystal_I2C lcd(0x27, 20, 4);
 #include <Servo.h>
 #include <Adafruit_MLX90614.h>
 Adafruit_MLX90614 mlx = Adafruit_MLX90614();
 
-const int servoPin = 2; //2 d4
+const int servoPin = 15;
+const int sudut = 180;
 Servo servo;
 
-const int relayPin = 3; //3 RX (wemos d4)
+const int relayPin = 3;
 bool relayState = HIGH;
 
-#define RST_PIN 0 //D3 atau 0 (pada nodemcu 8266) (wemos d0)
-#define SS_PIN 2 //2 d4 (wemos d8)
-MFRC522 rfid(SS_PIN, RST_PIN);  // Initialize RFID module with proper SS and RST pins
+#define RST_PIN 0
+#define SS_PIN 2
+MFRC522 rfid(SS_PIN, RST_PIN);
 
 // Network credentials
-const char* ssid = "Rumah sakit";
-const char* password = "k0stput1h";
+const char* ssid = "ENTER A VALUE";
+const char* password = "ENTER A VALUE";
 
 // Initialize Telegram BOT
-#define BOTtoken "6031204040:AAHT-0WczHzBzXJLdTMjEvqCkBcDRTSsV24"
-#define CHAT_ID "5397868830"
-
-// token example
-//#define BOTtoken "6008536230:AAFpYLVJXl6neZpOjPcBv7k2_aQs-9Br60Q"
-//#define CHAT_ID "1726336699"
+#define BOTtoken "ENTER A VALUE"
+#define CHAT_ID "ENTER A VALUE"
 
 #ifdef ESP8266
   X509List cert(TELEGRAM_CERTIFICATE_ROOT);
@@ -73,28 +70,15 @@ void handleNewMessages(int numNewMessages) {
     String from_name = bot.messages[i].from_name;
 
     if (text == "/start") {
-      String welcome = "Welcome, " + from_name + ".\n";
-      welcome += "Use the following commands to control your outputs.\n\n";
-      welcome += "Nanti diganti \n";
-      welcome += "Nanti diganti \n";
-      welcome += "Nanti diganti";
+      String welcome = "Welcome, " + from_name + ".\n\n";
+      welcome += "Sistem ini merupakan sistem monitoring pintu ";
+      welcome += "otomatis dengan ESP8266 dilengkapi sensor suhu ";
+      welcome += "dan RFID yang telah berhasil terintegrasi dengan ";
+      welcome += "aplikasi Telegram secara real-time.";
       bot.sendMessage(chat_id, welcome, "");
     }
 
-    // CODE JIKA INGIN MENGGUNAKAN COMMAND
-    /*
-    if (text == "/relay_on") {
-      bot.sendMessage(chat_id, "RELAY state set to ON", "");
-      relayState = LOW;
-      digitalWrite(relayPin, relayState);
-    }
-
-    if (text == "/relay_off") {
-      bot.sendMessage(chat_id, "RELAY state set to OFF", "");
-      relayState = HIGH;
-      digitalWrite(relayPin, relayState);
-    }
-    */
+    
 
     
   }
@@ -102,17 +86,17 @@ void handleNewMessages(int numNewMessages) {
 
 
 void setup() {
-  lcd.begin();
-  //lcd.init();
+  lcd.begin(); // Select one
+  //lcd.init(); // Select one
   lcd.backlight();
   
-  //servo.write(0);
+  servo.attach(servoPin);
   
   Serial.begin(115200);
 
   #ifdef ESP8266
-    configTime(0, 0, "pool.ntp.org");      // get UTC time via NTP
-    client.setTrustAnchors(&cert); // Add root certificate for api.telegram.org
+    configTime(0, 0, "pool.ntp.org");
+    client.setTrustAnchors(&cert);
   #endif
   
   pinMode(relayPin, OUTPUT);
@@ -121,7 +105,7 @@ void setup() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   #ifdef ESP32
-    client.setCACert(TELEGRAM_CERTIFICATE_ROOT); // Add root certificate for api.telegram.org
+    client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
   #endif
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -164,16 +148,6 @@ void RFIDuid() {
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
 
-    /*
-    unsigned long jeda;
-    servo.attach(servoPin);
-    servo.write(0);
-    jeda = millis();
-    servo.write(90);
-    */
-    
-    //delay(5000);
-    //servo.detach();
 
     float temperature = mlx.readObjectTempC();
     Serial.print("SUHU ANDA: ");
@@ -197,7 +171,14 @@ void RFIDuid() {
 
       relayState = LOW;
       digitalWrite(relayPin, relayState);
-      delay(4000);
+      
+      // servo
+      servo.write(sudut);
+      delay(1000);
+      servo.write(0);
+      delay(5000);
+      servo.write(sudut);
+      
       relayState = HIGH;
       digitalWrite(relayPin, relayState);
       lcd.clear();

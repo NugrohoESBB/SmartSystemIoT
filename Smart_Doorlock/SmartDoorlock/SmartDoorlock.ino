@@ -283,9 +283,8 @@ void RFIDuid() {
         bot.sendMessage(CHAT_ID, message, "");
         
         lcd.clear();
-        lcd.print("Suhu: ");
-        lcd.setCursor(5, 0);
-        lcd.print(temperature);
+        lcd.setCursor(0, 0);
+        lcd.print("Suhu: " + String(temperature));
         lcd.setCursor(0, 1);
         lcd.print("Silakan Masuk");
         
@@ -304,7 +303,7 @@ void RFIDuid() {
         //displayLCD();
       
       } else {
-
+        
         String message = "LAPORAN AKSES MASUK RUANGAN\n\n";
         message += "RFID UID          : " + uid + "\n";
         message += "STATUS            : UID terdaftar \n";
@@ -317,9 +316,8 @@ void RFIDuid() {
         bot.sendMessage(CHAT_ID, message, "");
     
         lcd.clear();
-        lcd.print("Suhu: ");
-        lcd.setCursor(5, 0);
-        lcd.print(temperature);
+        lcd.setCursor(0, 0);
+        lcd.print("Suhu: " + String(temperature));
         lcd.setCursor(0, 1);
         lcd.print("Dilarang Masuk");
         delay(4000);
@@ -328,6 +326,7 @@ void RFIDuid() {
       }
       
     } else {
+      
       String message = "LAPORAN AKSES MASUK RUANGAN\n\n";
       message += "RFID UID          : " + uid + "\n";
       message += "STATUS            : UID tidak terdaftar \n";
@@ -339,9 +338,7 @@ void RFIDuid() {
       bot.sendMessage(CHAT_ID, message, "");
     
       lcd.clear();
-      lcd.print("Suhu: ");
       lcd.setCursor(0, 0);
-      lcd.print("================");
       lcd.print("Unknown UID");
       lcd.setCursor(0, 1);
       lcd.print("Dilarang Masuk");

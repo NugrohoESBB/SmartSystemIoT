@@ -37,12 +37,12 @@ bool relayState = HIGH;
 MFRC522 rfid(SS_PIN, RST_PIN);  // Initialize RFID module with proper SS and RST pins
 
 // Network credentials
-const char* ssid = "Rumah sakit";
-const char* password = "k0stput1h";
+const char* ssid = "ENTER A VALUE";
+const char* password = "ENTER A VALUE";
 
 // Initialize Telegram BOT
-#define BOTtoken "6031204040:AAHT-0WczHzBzXJLdTMjEvqCkBcDRTSsV24"
-#define CHAT_ID "5397868830"
+#define BOTtoken "ENTER A VALUE"
+#define CHAT_ID "ENTER A VALUE"
 
 // NTP Servers:
 static const char ntpServerName[] = "id.pool.ntp.org";

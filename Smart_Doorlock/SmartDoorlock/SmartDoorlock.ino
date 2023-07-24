@@ -21,33 +21,28 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-//LiquidCrystal_I2C lcd(0x27, 20, 4);
 #include <Servo.h>
 #include <Adafruit_MLX90614.h>
 Adafruit_MLX90614 mlx = Adafruit_MLX90614();
 
-const int servoPin = 15; //15 D8
+const int servoPin = 15; // 15 D8
 const int sudut = 180;
 Servo servo;
 
-const int relayPin = 3; //3 RX (wemos d4)
+const int relayPin = 3; // (3) RX
 bool relayState = HIGH;
 
-#define RST_PIN 0 //D3 atau 0 (pada nodemcu 8266) (wemos d0)
-#define SS_PIN 2 //2 d4 (wemos d8)
+#define RST_PIN 0 // D3 (0)
+#define SS_PIN 2 // (2) d4
 MFRC522 rfid(SS_PIN, RST_PIN);  // Initialize RFID module with proper SS and RST pins
 
 // Network credentials
-const char* ssid = "muro";
-const char* password = "Piscok2000";
+const char* ssid = "Rumah sakit";
+const char* password = "k0stput1h";
 
 // Initialize Telegram BOT
-//#define BOTtoken "6031204040:AAHT-0WczHzBzXJLdTMjEvqCkBcDRTSsV24"
-//#define CHAT_ID "5397868830"
-
-// token example
-#define BOTtoken "6008536230:AAFpYLVJXl6neZpOjPcBv7k2_aQs-9Br60Q"
-#define CHAT_ID "1726336699"
+#define BOTtoken "6031204040:AAHT-0WczHzBzXJLdTMjEvqCkBcDRTSsV24"
+#define CHAT_ID "5397868830"
 
 // NTP Servers:
 static const char ntpServerName[] = "id.pool.ntp.org";
@@ -97,24 +92,9 @@ void handleNewMessages(int numNewMessages) {
       welcome += "aplikasi Telegram secara real-time.";
       bot.sendMessage(chat_id, welcome, "");
     }
-
-    // CODE JIKA INGIN MENGGUNAKAN COMMAND
-    /*
-    if (text == "/relay_on") {
-      bot.sendMessage(chat_id, "RELAY state set to ON", "");
-      relayState = LOW;
-      digitalWrite(relayPin, relayState);
-    }
-
-    if (text == "/relay_off") {
-      bot.sendMessage(chat_id, "RELAY state set to OFF", "");
-      relayState = HIGH;
-      digitalWrite(relayPin, relayState);
-    }
-    */
-
     
   }
+  
 }
 
 
@@ -166,7 +146,6 @@ void setup() {
   setSyncProvider(getNtpTime);
   setSyncInterval(300);
   
-  //displayLCD();
 }
 
 time_t prevDisplay = 0;
@@ -183,9 +162,8 @@ void displayLCD() {
 }
 
 void digitalClockDisplay() {
-  lcd.setCursor(0,0);
+  lcd.setCursor(1,0);
   lcd.print(String(day()) + "/" + String(month()) + "/" + "23" + "  " + String(hour()) + ":" + String(minute()) );
-  //lcd.print(String(day()) + "/" + String(month()) + "/" + "23" + " " + String(hour()) + ":" + String(minute()) + ":" + String(second()));
 }
 
 void printDigits(int digits) {
@@ -263,20 +241,19 @@ void RFIDuid() {
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
 
-    // 2 decision bisa semua, pilih saja yang paling mudah
-    //if (uid.substring(0) == "63cb5da6") {
-    if (uid == "63cb5da6") {
+    
+    if (uid == "e35ee311") {
       float temperature = mlx.readObjectTempC();
       Serial.print("SUHU ANDA: ");
       Serial.println(temperature);
       Serial.println(mlx.readObjectTempC());
       if (temperature >= 25.00 && temperature <= 35.00) {
         String message = "LAPORAN AKSES MASUK RUANGAN\n\n";
-        message += "RFID UID          : " + uid + "\n";
-        message += "Status            : UID terdaftar \n";
+        message += "RFID UID                  : " + uid + "\n";
+        message += "Status                      : UID terdaftar \n";
         message += "Tanggal dan waktu : " + String(day()) + "/" + String(month()) + "/" + String(year()) + " " + String(hour()) + ":" + String(minute()) + ":" + String(second()) + "\n";
-        message += "Suhu              : " + String(temperature) + "°C \n";
-        message += "Keterangan        : Silakan Masuk.";
+        message += "Suhu                         : " + String(temperature) + "°C \n";
+        message += "Keterangan              : Silakan Masuk.";
         Serial.print("RFID UID: ");
         Serial.println(uid);
         Serial.println("STATUS: UID terdaftar");
@@ -297,19 +274,19 @@ void RFIDuid() {
         servo.write(0);
         delay(5000);
         servo.write(sudut);
+        delay(1000);
         relayState = HIGH;
         digitalWrite(relayPin, relayState);
         lcd.clear();
-        //displayLCD();
       
       } else {
         
         String message = "LAPORAN AKSES MASUK RUANGAN\n\n";
-        message += "RFID UID          : " + uid + "\n";
-        message += "STATUS            : UID terdaftar \n";
+        message += "RFID UID                  : " + uid + "\n";
+        message += "Status                      : UID terdaftar \n";
         message += "Tanggal dan waktu : " + String(day()) + "/" + String(month()) + "/" + String(year()) + " " + String(hour()) + ":" + String(minute()) + ":" + String(second()) + "\n";
-        message += "suhu              : " + String(temperature) + "°C \n";
-        message += "Keterangan        : Dilarang masuk karena suhu anda terlalu tinggi.";
+        message += "Suhu                         : " + String(temperature) + "°C \n";
+        message += "Keterangan              : Dilarang masuk karena suhu anda terlalu tinggi.";
         Serial.print("RFID UID: ");
         Serial.println(uid);
         Serial.println("STATUS: UID terdaftar");
@@ -322,16 +299,74 @@ void RFIDuid() {
         lcd.print("Dilarang Masuk");
         delay(4000);
         lcd.clear();
-        //displayLCD();
+      }
+      
+    } else if (uid == "4216a556") {
+      float temperature = mlx.readObjectTempC();
+      Serial.print("SUHU ANDA: ");
+      Serial.println(temperature);
+      Serial.println(mlx.readObjectTempC());
+      if (temperature >= 25.00 && temperature <= 35.00) {
+        String message = "LAPORAN AKSES MASUK RUANGAN\n\n";
+        message += "RFID UID                  : " + uid + "\n";
+        message += "Status                      : UID terdaftar \n";
+        message += "Tanggal dan waktu : " + String(day()) + "/" + String(month()) + "/" + String(year()) + " " + String(hour()) + ":" + String(minute()) + ":" + String(second()) + "\n";
+        message += "Suhu                         : " + String(temperature) + "°C \n";
+        message += "Keterangan              : Silakan Masuk.";
+        Serial.print("RFID UID: ");
+        Serial.println(uid);
+        Serial.println("STATUS: UID terdaftar");
+        bot.sendMessage(CHAT_ID, message, "");
+        
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Suhu: " + String(temperature));
+        lcd.setCursor(0, 1);
+        lcd.print("Silakan Masuk");
+        
+        relayState = LOW;
+        digitalWrite(relayPin, relayState);
+        
+        // servo
+        servo.write(sudut);
+        delay(1000);
+        servo.write(0);
+        delay(5000);
+        servo.write(sudut);
+        delay(1000);
+        relayState = HIGH;
+        digitalWrite(relayPin, relayState);
+        lcd.clear();
+      
+      } else {
+        
+        String message = "LAPORAN AKSES MASUK RUANGAN\n\n";
+        message += "RFID UID                  : " + uid + "\n";
+        message += "Status                      : UID terdaftar \n";
+        message += "Tanggal dan waktu : " + String(day()) + "/" + String(month()) + "/" + String(year()) + " " + String(hour()) + ":" + String(minute()) + ":" + String(second()) + "\n";
+        message += "Suhu                         : " + String(temperature) + "°C \n";
+        message += "Keterangan              : Dilarang masuk karena suhu anda terlalu tinggi.";
+        Serial.print("RFID UID: ");
+        Serial.println(uid);
+        Serial.println("STATUS: UID terdaftar");
+        bot.sendMessage(CHAT_ID, message, "");
+    
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Suhu: " + String(temperature));
+        lcd.setCursor(0, 1);
+        lcd.print("Dilarang Masuk");
+        delay(4000);
+        lcd.clear();
       }
       
     } else {
       
       String message = "LAPORAN AKSES MASUK RUANGAN\n\n";
-      message += "RFID UID          : " + uid + "\n";
-      message += "STATUS            : UID tidak terdaftar \n";
+      message += "RFID UID                  : " + uid + "\n";
+      message += "Status                      : UID tidak terdaftar \n";
       message += "Tanggal dan waktu : " + String(day()) + "/" + String(month()) + "/" + String(year()) + " " + String(hour()) + ":" + String(minute()) + ":" + String(second()) + "\n";
-      message += "Keterangan        : Dilarang masuk karena UID tidak terdaftar.";
+      message += "Keterangan              : Dilarang masuk karena UID tidak terdaftar.";
       Serial.print("RFID UID: ");
       Serial.println(uid);
       Serial.println("STATUS: UID tidak terdaftar");
@@ -344,7 +379,6 @@ void RFIDuid() {
       lcd.print("Dilarang Masuk");
       delay(4000);
       lcd.clear();
-      //displayLCD();
     }
     
   }
@@ -366,6 +400,5 @@ void loop() {
     }
     lastTimeBotRan = millis();
   }
-
 
 }

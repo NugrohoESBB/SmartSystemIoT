@@ -24,12 +24,12 @@
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // Replace with your network credentials
-const char* ssid = "iPhone 11";
-const char* password = "kamunanyea";
+const char* ssid = "ENTER A VALUE";
+const char* password = "ENTER A VALUE";
 
 // Initialize Telegram BOT
-#define BOTtoken "6312458770:AAFM6sNRjmcXuYy5vqvnLGoOkl5PTAq8Kj0"
-#define CHAT_ID "6016402723"
+#define BOTtoken "ENTER A VALUE"
+#define CHAT_ID "ENTER A VALUE"
 
 
 #ifdef ESP8266

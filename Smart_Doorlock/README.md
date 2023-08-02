@@ -4,7 +4,7 @@ Run Website -> not available
 # All are examples ↓ ↓ ↓ 
 
 # Schematic
-![Wiring](https://github.com/multimedia-dan-robotika/Pengaduk-nutrisi/blob/main/SchematicPengadukNutrisi_V2.png)
+![Wiring]([https://github.com/multimedia-dan-robotika/Pengaduk-nutrisi/blob/main/SchematicPengadukNutrisi_V2.png](https://github.com/NugrohoESBB/SmartSystemIoT/blob/main/Smart_Doorlock/schematic.png))
 
 # Documentation
 

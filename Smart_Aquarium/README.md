@@ -1,4 +1,4 @@
-# 🌡️🐟Smart Doorlock🐟🌡️
+# Smart Doorlock🐟🌡️
 Run Website -> not available
 
 # Schematic
@@ -19,7 +19,7 @@ Run Website -> not available
 
 | PIN DS18B20 | Type     | Pin WeMos D1 Mini| 
 | :-------- | :------- |  :------- |
-| `DATA` | `Communication` |`D1` |
+| `DATA` | `Communication` |`D5` |
 | `GND` | `Ground` |`GND`|
 | `5V` | `VCC` | `5V`|
 

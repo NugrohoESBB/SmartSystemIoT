@@ -4,7 +4,7 @@
   PIN RELAY INT1 (POMPA KELUAR) : D4
   PIN RELAY INT2 (POMPA MASUK)  : D3
   PIN BUZZER                    : D0
-  PIN DS18B20                   : D1
+  PIN DS18B20                   : D5
 */
 
 #ifdef ESP32
@@ -20,7 +20,7 @@
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-OneWire  ds(D1);
+OneWire  ds(D5);
 
 // Replace with your network credentials
 const char* ssid = "muro";
@@ -156,7 +156,7 @@ void displayLCD() {
   
   dsValue();
   
-  if (celsius > 28.00) {
+  if (celsius > 33.00) {
     String message = "LAPORAN MONITORING AKUARIUM\n\n";
     message += "SUHU : " + String(celsius) + "°C\n";
     message += "Keterangan : Suhu akuarium terlalu panas, sistem sedang bekerja.";

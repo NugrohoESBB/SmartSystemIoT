@@ -135,42 +135,9 @@ void displayLCD() {
   ds1Value();
   ds2Value();
   
-  if (celsius1 > 33.00) {
-    String message = "LAPORAN MONITORING AKUARIUM\n\n";
-    message += "SUHU KOLAM 1 : " + String(celsius1) + "°C\n";
-    message += "Keterangan : Suhu akuarium terlalu panas, sistem sedang bekerja.";
-    bot.sendMessage(CHAT_ID, message, "");
+  if (celsius1 > 33.00 && celsius2 > 33.00) {
     
-    digitalWrite(buzzerPin, LOW);
-    delay(5000);
-    digitalWrite(buzzerPin, HIGH);
-    digitalWrite(relayPo1KPin, LOW);
-    delay(3000);
-    digitalWrite(relayPo1KPin, HIGH);
-    digitalWrite(relayPo1MPin, LOW);
-    delay(3000);
-    digitalWrite(relayPo1MPin, HIGH);
-    
-  } else if (celsius2 > 33.00) {
-    
-    String message = "LAPORAN MONITORING AKUARIUM\n\n";
-    message += "SUHU KOLAM 2 : " + String(celsius2) + "°C\n";
-    message += "Keterangan : Suhu akuarium terlalu panas, sistem sedang bekerja.";
-    bot.sendMessage(CHAT_ID, message, "");
-    
-    digitalWrite(buzzerPin, LOW);
-    delay(5000);
-    digitalWrite(buzzerPin, HIGH);
-    digitalWrite(relayPo2KPin, LOW);
-    delay(3000);
-    digitalWrite(relayPo2KPin, HIGH);
-    digitalWrite(relayPo2MPin, LOW);
-    delay(3000);
-    digitalWrite(relayPo2MPin, HIGH);
-    
-  } else if (celsius1 > 33.00 && celsius2 > 33.00) {
-    
-    String message = "LAPORAN MONITORING AKUARIUM\n\n";
+    String message = "LAPORAN STATUS AKUARIUM\n\n";
     message += "SUHU KOLAM 1 : " + String(celsius1) + "°C\n";
     message += "SUHU KOLAM 2 : " + String(celsius2) + "°C\n";
     message += "Keterangan : Suhu akuarium terlalu panas, sistem sedang bekerja.";

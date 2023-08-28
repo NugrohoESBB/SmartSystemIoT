@@ -1,13 +1,13 @@
 /*
   KUMPULAN PIN-PIN
- 
+
   PIN RELAY INT1 (POMPA 1 KELUAR) : D4
   PIN RELAY INT2 (POMPA 1 MASUK)  : D3
-  PIN RELAY INT3 (POMPA 2 KELUAR) : D7
-  PIN RELAY INT4 (POMPA 2 MASUK)  : D8
-  PIN BUZZER                      : D6
+  PIN RELAY INT3 (POMPA 2 KELUAR) : D8
+  PIN RELAY INT4 (POMPA 2 MASUK)  : D6
+  PIN BUZZER                      : D0
   PIN DS18B20 Pertama             : D5
-  PIN DS18B20 Kedua               : D0
+  PIN DS18B20 Kedua               : D7
 */
 
 #ifdef ESP32
@@ -27,12 +27,12 @@ OneWire  ds1(D5);
 OneWire  ds2(D7);
 
 // Replace with your network credentials
-const char* ssid = "iPhone";
-const char* password = "12345678";
+const char* ssid = "ENTER A VALUE";
+const char* password = "ENTER A VALUE";
 
 // Initialize Telegram BOT
-#define BOTtoken "6537928421:AAFZpzNOPaolASKoIKA0wWw77rC_fx3CHlI"
-#define CHAT_ID "6206427860"
+#define BOTtoken "ENTER A VALUE"
+#define CHAT_ID "ENTER A VALUE"
 
 #ifdef ESP8266
   X509List cert(TELEGRAM_CERTIFICATE_ROOT);

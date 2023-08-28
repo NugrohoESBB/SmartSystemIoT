@@ -2,7 +2,7 @@
 Run Website -> not available
 
 # Schematic
-![Wiring](https://github.com/NugrohoESBB/SmartSystemIoT/blob/main/Smart_Aquarium/schematic_aquarium.png)
+![Wiring](https://github.com/NugrohoESBB/SmartSystemIoT/blob/main/Smart_Aquarium/schematic_aquariumFIX.png)
 
 # Documentation
 

@@ -127,7 +127,7 @@ void flameSensor() {
 void gasSensor() {
   analogGasValue = analogRead(gasPin);
   percentageGas = ((analogGasValue - 0) / (1023 - 0)) * 100;
-  Serial.println("value gas   - " + String(analogGasValue) + String(percentageGas));
+  Serial.println("value gas   - " + String(analogGasValue) + " = " + String(percentageGas));
 
   if (percentageGas >= 50) {
     digitalWrite(fanINA,LOW);

@@ -37,12 +37,12 @@
 #define SCREEN_ADDRESS 0x3C
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-const char* ssid = "ENTER A VALUE";
-const char* password = "ENTER A VALUE";
+const char* ssid = "Rumah sakit";
+const char* password = "k0stput1h";
 
 // Initialize Telegram BOT
-#define BOTtoken "ENTER A VALUE"
-#define CHAT_ID "ENTER A VALUE"
+#define BOTtoken "6008536230:AAFpYLVJXl6neZpOjPcBv7k2_aQs-9Br60Q"
+#define CHAT_ID "1726336699"
 
 #ifdef ESP8266
   X509List cert(TELEGRAM_CERTIFICATE_ROOT);
@@ -126,7 +126,7 @@ void flameSensor() {
 
 void gasSensor() {
   analogGasValue = analogRead(gasPin);
-  percentageGas = ((analogGasValue - 0) / (1023 - 0)) * 100;
+  percentageGas = ((analogGasValue / 1023.0) * 100);
   Serial.println("value gas   - " + String(analogGasValue) + " = " + String(percentageGas));
 
   if (percentageGas >= 50) {

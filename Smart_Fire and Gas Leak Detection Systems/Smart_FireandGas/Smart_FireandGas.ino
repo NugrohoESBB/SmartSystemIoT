@@ -41,8 +41,8 @@ const char* ssid = "Rumah sakit";
 const char* password = "k0stput1h";
 
 // Initialize Telegram BOT
-#define BOTtoken "6008536230:AAFpYLVJXl6neZpOjPcBv7k2_aQs-9Br60Q"
-#define CHAT_ID "1726336699"
+#define BOTtoken "6628954786:AAENVhdzZ6Cf0JLs1h_74LLmdqAc1tq7MP4"
+#define CHAT_ID "6985950188"
 
 #ifdef ESP8266
   X509List cert(TELEGRAM_CERTIFICATE_ROOT);
@@ -110,14 +110,36 @@ void handleNewMessages(int numNewMessages) {
   
 }
 
+void postDataTele() {
+  String message = "Status Sistem. \n\n";
+  message += "Suhu : " + String(temp) + "°C" + "\n";
+  message += "Gas CO2 : " + String(percentageGas) + "%" + "\n";
+  message += "Kecerahan : " + String(lux) + "\n";
+  message += "Status Api : Terdapat api \n";
+  bot.sendMessage(CHAT_ID, message, "");
+}
+
 void flameSensor() {
   digitalFlameValue = digitalRead(flamePin);
   Serial.println("value flame - " + String(digitalFlameValue));
   
   if (digitalFlameValue == 0) {
     relayState = LOW;
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0,10);
+    display.print("Temp  : " + String(temp) + " C");
+    display.setCursor(0,20);
+    display.println("MQ2   : " + String(percentageGas) + "%");
+    display.setCursor(0,30);
+    display.println("Lux   : " + String(lux));
+    display.setCursor(0,40);
+    display.println("Flame : Terdapat api");
+    display.display();
     digitalWrite(relayPump, relayState);
     digitalWrite(buzzerPin, HIGH);
+    postDataTele();
   } else {
     digitalWrite(relayPump, HIGH);
     digitalWrite(buzzerPin, LOW);
@@ -133,6 +155,7 @@ void gasSensor() {
     digitalWrite(fanINA,LOW);
     digitalWrite(fanINB,HIGH);
     digitalWrite(buzzerPin, HIGH);
+    postDataTele();
   } else {
     digitalWrite(fanINA,LOW);
     digitalWrite(fanINB,LOW);
@@ -170,13 +193,10 @@ void oledDisplay() {
   display.setCursor(0,30);
   display.println("Lux   : " + String(lux));
   display.setCursor(0,40);
-  if (digitalFlameValue == 0) {
-    display.println("Flame : Terdapat api");
-  } else {
-    display.println("Flame : Tidak ada api");
-  }
+  display.println("Flame : Tidak ada api");
   display.display();
 }
+
 
 
 void setup() {
@@ -255,17 +275,6 @@ void loop() {
 
   // Display Value
   oledDisplay();
-
-  String message = "Status Sistem. \n\n";
-  message += "Suhu : " + String(temp) + "°C" + "\n";
-  message += "Gas CO2 : " + String(percentageGas) + "%" + "\n";
-  message += "Kecerahan : " + String(lux) + "\n";
-  if (digitalFlameValue == 0) {
-    message += "Status Api : Terdapat api \n";
-  } else {
-    message += "Status Api : Tidak ada api \n";
-  }
-  bot.sendMessage(CHAT_ID, message, "");
 
 
   // Send data to Telegram
